@@ -80,9 +80,9 @@
 			<h4>The <code>.animate</code> syntax</h4>
 			<ul>
 				<li>Problem: <code>mobj.method()</code> usually returns a mobject, mobjects cannot be passed to <code>play</code></li>
-				<li>Solution: Mobjects have a <code>.animate</code> property which can build animations!</li>
+				<li class="fragment">Solution: Mobjects have a <code>.animate</code> property which can build animations!</li>
 			</ul>
-			<pre><code>def construct(self):
+			<pre class="fragment"><code>def construct(self):
     s = Square()
     self.play(s.animate.shift(RIGHT))  # animation of shift by RIGHT
     self.play(s.animate(run_time=2).scale(3))  # supports animation keywords
@@ -97,10 +97,10 @@
 			<h4>Related animations: <code>MoveToTarget</code> and <code>Restore</code></h4>
 			<ul>
 				<li>General philosophy: create a copy of a mobject, modify it however you like, then transform between original mobject and modified copy</li>
-				<li><code>MoveToTarget</code>: call <code>mob.generate_target()</code>,
+				<li class="fragment"><code>MoveToTarget</code>: call <code>mob.generate_target()</code>,
 					then modify <code>mob.target</code> – animate with <code>MoveToTarget(mob)</code>
 				</li>
-				<li><code>Restore</code>: call <code>mob.save_state()</code>, then keep
+				<li class="fragment"><code>Restore</code>: call <code>mob.save_state()</code>, then keep
 				modifying <code>mob</code> – animate return to saved state with <code>Restore(mob)</code></li>
 			</ul>
 		</section>
