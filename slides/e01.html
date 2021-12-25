@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Hands-On Manim Workshop</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/behackl-manim-dark.css">
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+		<link rel="stylesheet" href="plugin/chalkboard/palette.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="header-left">
+				An invitation to Manim
+			</div>
+			<div class="footer-left">
+				<img src="assets/manim-logo-dark.svg" width="50">
+			</div>
+<div class="slides">
+	<section>
+		<section data-state="titleslide" data-background-video="assets/DarkPresentationBackground.mp4" data-background-video-loop="true"
+		data-background-opacity="0.1">
+		<div style="">
+			<h4>PART 1</h4>
+			<h2>Things to know before you start</h2>
+		</div>
+		</section>
+		<section>
+			<h4>History is complicated: different versions!</h4>
+			<ul>
+				<li><bem>CAUTION:</bem> There are several <strong>incompatible</strong> versions of Manim floating around.
+					<ul class="fragment">
+						<li><em>Manim</em>: the <em>community maintained</em> version</li>
+						<li>3b1b/manim – manimgl – manimlib: the <em>original</em> version, developed + maintained mainly by Grant "3b1b" Sanderson</li>
+					</ul>
+				</li>
+				<li class="fragment">
+					This video is about the community maintained version!
+				</li>
+			</ul>
+		</section>
+		<section>
+			<h4>How do I install Manim?</h4>
+			<ul>
+				<li>Two ingredients: <bem>FFmpeg</bem> and <bem>Python (3.7+)</bem></li>
+				<li class="fragment">Optional (but useful): a LaTeX distribution like MiKTeX / TeXLive</li>
+				<li class="fragment">Caution: most installation videos are outdated!</li>
+			</ul>
+			<div class="block fragment">
+				Go to <a href="https://docs.manim.community">docs.manim.community</a>
+				and follow installation instructions for your OS!
+			</div>
+		</section>
+		<section>
+			<h4>Help and other resources?</h4>
+			<ul>
+				<li>All community resources: <a href="https://manim.community">www.manim.community</a></li>
+				<li class="fragment">
+					Places to get help:
+					<ul>
+						<li>Manim Discord server: <a href="https://manim.community/discord" style="font-size:0.8em;">manim.community/discord</a></li>
+						<li class="fragment">Reddit: <a href="https://reddit.com/r/manim/" style="font-size:0.8em;">reddit.com/r/manim</a></li>
+						<li class="fragment">GitHub discussions: <a href="https://github.com/ManimCommunity/manim/discussions" style="font-size:0.8em;">github.com/ManimCommunity/manim</a></li>
+					</ul>
+				</li>
+				<li class="fragment">Make sure to post code + output when asking a question!</li>
+				<li class="fragment">Interactive worksheet: see description!</li>
+			</ul>
+		</section>
+	</section>
+	<section>
+		<section data-state="titleslide" data-background-video="assets/DarkPresentationBackground.mp4" data-background-video-loop="true"
+		data-background-opacity="0.1">
+		<div style="">
+			<h4>PART 2</h4>
+			<h2>Basic anatomy of <em>Manimations</em></h2>
+		</div>
+		</section>
+		<section style="">
+			<h4>Learning by Doing!</h4>
+			<pre><code data-fragment-index="0" data-line-numbers="|1|3|4|5-6|7|8|">from manim import *
+
+class FirstExample(Scene):
+    def construct(self):
+        blue_circle = Circle(color=BLUE, fill_opacity=0.5)
+        green_square = Square(color=GREEN, fill_opacity=0.8)
+        green_square.next_to(blue_circle, RIGHT)
+        self.add(blue_circle, green_square)</code></pre>
+		<h5 class="fragment">Generating Output ...</h5>
+		<div style="display: flex; flex-direction: row;">
+			<div class="fragment"><em>... the "normal" way:</em>
+				<ul>
+					<li>Write code in <code>file.py</code></li>
+					<li>Then run <code>manim -qm -p file.py FirstExample</code> in terminal</li>
+				</ul>
+			</div>
+			<div class="fragment">
+				<em>... with Jupyter:</em>
+				<ul>
+					<li>Import manim, put code for scene in a cell</li>
+					<li><code>%%manim -qm FirstExample</code> at beginning of cell, then run it</li>
+				</ul>
+			</div>
+		</div>
+		</section>
+		<section>
+			<h4>Scene, Mobjects, global constants</h4>
+			<ul>
+				<li class="fragment">Scene: animation canvas</li>
+				<li class="fragment">Mobjects: Manim objects – <code>Circle</code>, <code>Square</code>, ...</li>
+				<li class="fragment">Mobjects have properties – <code>color</code>, <code>fill_opacity</code>, ...</li>
+				<li class="fragment">Some global constants: colors (<code>BLUE</code>, <code>GREEN</code>, ...) and directions (<code>UP</code>, <code>DOWN</code>, <code>RIGHT</code>, ...)</li>
+			</ul>
+			<div class="fragment block">
+				The <em>reference manual</em> at <a href="https://docs.manim.community">docs.manim.community</a> lists all available classes and functions!
+			</div>
+		</section>
+	</section>
+	<section>
+	<section data-state="titleslide" data-background-video="assets/PresentationBackground.mp4" data-background-video-loop="true"
+	data-background-opacity="0.1">
+	<div style="">
+		<h4>PART 3</h4>
+		<h2>Moving Pictures!</h2>
+	</div>
+	</section>
+	<section>
+		<h4>add, wait, play – Animations!</h4>
+		<ul>
+			<li><code>Scene.add</code> adds Mobjects immediately to the scene</li>
+			<li class="fragment"><code>Scene.wait</code> adds a pause </li>	
+			<li class="fragment"><code>Scene.play</code> <em>plays</em> <bem>animations</bem></li>
+			<li class="fragment">Animations can ...
+				<ul>
+					<li>add mobjects (<code>Create</code>, <code>FadeIn</code>, ...)</li>
+					<li class="fragment">change mobjects (<code>Transform</code>, ...)</li>
+					<li class="fragment">emphasize mobjects (<code>Indicate</code>, <code>Circumscribe</code>, ...)</li>
+					<li class="fragment">remove mobejcts (<code>Uncreate</code>, <code>FadeOut</code>, ...)</li>
+				</ul>
+			</li>
+		</ul>
+	</section>
+	</section>
+</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/animate/plugin.js"></script>
+		<script src="plugin/animate/svg.min.js"></script>
+		<script src="plugin/chalkboard/plugin.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/search/search.js"></script>
+		<script src="plugin/zoom/zoom.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				controls: false,
+				hash: true,
+				slideNumber: false,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealChalkboard, RevealMath, RevealAnimate, RevealZoom, RevealSearch ],
+				math: {
+					mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+					// mathjax: 'plugin/math/MathJax.js',
+					config: 'TeX-AMS_HTML-full',
+					// pass other options into `MathJax.Hub.Config()`
+					TeX: { Macros: { RR: "{\\bf R}", id: "\\operatorname{id}" } }
+				},
+				chalkboard: {
+					colorButtons: true,
+				}
+			});
+		</script>
+	</body>
+</html>

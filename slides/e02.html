@@ -1,0 +1,126 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Mathematical Animations WITH EASE | Episode 02</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/behackl-manim-dark.css">
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+		<link rel="stylesheet" href="plugin/chalkboard/palette.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="header-left">
+				Episode 02: Positioning + Configuration
+			</div>
+			<div class="footer-left">
+				<img src="assets/manim-logo-dark.svg" width="50">
+			</div>
+<div class="slides">
+	<section>
+		<section data-state="titleslide" data-background-video="assets/DarkPresentationBackground.mp4" data-background-video-loop="true"
+		data-background-opacity="0.1">
+		<div style="">
+			<h4>PART 1</h4>
+			<h2>Positioning and Alignment of Mobjects</h2>
+		</div>
+		</section>
+		<section>
+			<h4>Coordinates</h4>
+			<ul>
+				<li>Manim uses 3D coordinate system (internally: points are NumPy arrays)</li>
+				<li class="fragment"><bem>Default (2D) settings:</bem> Scene frame is 
+					<ul class="fragment">
+						<li>$8$ <em class="co">Munits</em><sup>[Manim Units]</sup> in height</li>
+						<li>$14 + 2/9 = 14.2\dot{2}$ Munits in width</li>
+					</ul>
+				</li>
+				<li class="fragment">Origin $(0,0,0)$ is at center of frame; it measures $[-7.1\dot{1}, 7.1\dot{1}] \times [-4, 4]$ Munits</li>
+				<li class="fragment">Pixel measurements of output depend on <em>quality settings</em></li>
+			</ul>
+		</section>
+	</section>
+	<section>
+		<section data-state="titleslide" data-background-video="assets/DarkPresentationBackground.mp4" data-background-video-loop="true"
+		data-background-opacity="0.1">
+		<div style="">
+			<h4>PART 2</h4>
+			<h2>Manim's configuration system</h2>
+		</div>
+		</section>
+		<section>
+			<h4><code>config</code></h4>
+			<ul>
+				<li>Idea: <em>Single Source of Truth</em> for "global" settings</li>
+				<li class="fragment"><a href="https://docs.manim.community/en/stable/reference/manim._config.utils.ManimConfig.html#manim._config.utils.ManimConfig">Documentation</a> and <a href="https://docs.manim.community/en/stable/tutorials/configuration.html">Tutorial</a></li>
+				<li class="fragment">Settings can be changed in <code>.py</code> file, but also in separate <code>manim.cfg</code> file</li>
+				<li class="fragment">Local config generation: <code class="co">manim cfg write -l cwd</code></li>
+			</ul>
+			<pre class="fragment"><code>[CLI]
+notify_outdated_version = True
+background_color = WHITE
+frame_width = 16
+frame_height = 9
+frame_rate = 60
+pixel_height = 1080
+pixel_width = 1920</code></pre>
+		</section>
+		<section>
+			<h4>Changing Mobject default arguments</h4>
+			<ul>
+				<li>Mobjects have default keyword arguments (e.g., color)</li>
+				<li>Default values can be changed using <code class="co">set_default</code>!</li>
+			</ul>
+			<pre><code>Square.set_default(color=GREEN, fill_opacity=1)
+s = Square()  # green, filled square
+
+Square.set_default()  # restores default behavior
+s2 = Square()  # white, empty square</code></pre>
+		</section>
+	</section>
+</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/animate/plugin.js"></script>
+		<script src="plugin/animate/svg.min.js"></script>
+		<script src="plugin/chalkboard/plugin.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/search/search.js"></script>
+		<script src="plugin/zoom/zoom.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				controls: false,
+				hash: true,
+				slideNumber: false,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealChalkboard, RevealMath, RevealAnimate, RevealZoom, RevealSearch ],
+				math: {
+					mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+					// mathjax: 'plugin/math/MathJax.js',
+					config: 'TeX-AMS_HTML-full',
+					// pass other options into `MathJax.Hub.Config()`
+					TeX: { Macros: { RR: "{\\bf R}", id: "\\operatorname{id}" } }
+				},
+				chalkboard: {
+					colorButtons: true,
+				}
+			});
+		</script>
+	</body>
+</html>
