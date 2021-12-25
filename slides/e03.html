@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Episode 03 | Mathematical Animations WITH EASE</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/behackl-manim-dark.css">
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+		<link rel="stylesheet" href="plugin/chalkboard/palette.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="header-left">
+				Episode 03: Animations
+			</div>
+			<div class="footer-left">
+				<img src="assets/manim-logo-dark.svg" width="50">
+			</div>
+<div class="slides">
+	<section>
+		<section data-state="titleslide" data-background-video="assets/DarkPresentationBackground.mp4" data-background-video-loop="true"
+		data-background-opacity="0.1">
+		<div style="">
+			<h4>PART 1</h4>
+			<h2>Animation Basics</h2>
+		</div>
+		</section>
+		<section>
+			<h4>Animation Keyword Arguments</h4>
+			<ul>
+				<li><code>mobject</code> - <bem>every</bem> animation is tied to a mobject</li>
+				<li class="fragment"><code>run_time</code> – the animation's play duration</li>
+				<li class="fragment"><code>rate_func</code> – a function $r\colon [0,1] \to [0,1]$ controlling animation progression</li>
+				<li class="fragment">... and some more technical, less relevant ones</li>
+			</ul>
+		</section>
+		<section>
+			<h4>Basic Mechanisms of <code>Scene.play</code></h4>
+			<ul>
+				<li>Multiple animations can be passed as positional arguments:<br>
+					<code>self.play(anim1, anim2, ...)</code></li>
+				<li class="fragment">Passing animation keyword arguments propagates them to all animations:<br>
+					<code>self.play(anim1, anim2, run_time=3)</code>
+				</li>
+				<li class="fragment">
+					Manim will <bem>not</bem> error if you try to pass <em>conflicting</em> animations, it cannot combine different animations for you!<br>
+					<code>self.play(Rotate(s, PI), Rotate(s, -PI))</code>
+				</li>
+			</ul>
+		</section>
+		<section>
+			<h4>Overlapping Animations</h4>
+			<ul>
+				<li>Useful for grouping animations: <code>AnimationGroup</code></li>
+				<li class="fragment">Like <code>Group</code> or <code>VGroup</code>, but
+				for animations</li>
+				<li class="fragment">Keyword argument <code>lag_ratio</code>, number between 0 and 1, controls
+				whether animations are played simultaneously (0), successively (1), or anything in between</li>
+				<li class="fragment">Finer control possible by editing list in <code>anims_with_timings</code> attribute</li>
+			</ul>
+		</section>
+	</section>
+	<section>
+		<section data-state="titleslide" data-background-video="assets/DarkPresentationBackground.mp4" data-background-video-loop="true"
+		data-background-opacity="0.1">
+		<div style="">
+			<h4>PART 2</h4>
+			<h2>Animations from Method calls and Functions</h2>
+		</div>
+		</section>
+		<section>
+			<h4>The <code>.animate</code> syntax</h4>
+			<ul>
+				<li>Problem: <code>mobj.method()</code> usually returns a mobject, mobjects cannot be passed to <code>play</code></li>
+				<li>Solution: Mobjects have a <code>.animate</code> property which can build animations!</li>
+			</ul>
+			<pre><code>def construct(self):
+    s = Square()
+    self.play(s.animate.shift(RIGHT))  # animation of shift by RIGHT
+    self.play(s.animate(run_time=2).scale(3))  # supports animation keywords
+    self.play(s.animate.scale(1/2).shift(2*LEFT)  # supports chaining</code></pre>
+			<div class="fragment block">
+				<bem>Note:</bem> <code>.animate</code> is <b>not</b> aware of <em>how</em>
+				your mobjects change, it knows only start &amp; end and interpolates linearly
+				between them!
+			</div>
+		</section>
+		<section>
+			<h4>Related animations: <code>MoveToTarget</code> and <code>Restore</code></h4>
+			<ul>
+				<li>General philosophy: create a copy of a mobject, modify it however you like, then transform between original mobject and modified copy</li>
+				<li><code>MoveToTarget</code>: call <code>mob.generate_target()</code>,
+					then modify <code>mob.target</code> – animate with <code>MoveToTarget(mob)</code>
+				</li>
+				<li><code>Restore</code>: call <code>mob.save_state()</code>, then keep
+				modifying <code>mob</code> – animate return to saved state with <code>Restore(mob)</code></li>
+			</ul>
+		</section>
+		<section>
+			<h4>Custom Animations via Functions</h4>
+			<ul>
+				<li>Abstraction: an animation is a function mapping (mobject, completion ratio) to a mobject<pre class="fragment"><code>def move_somewhere(mobj, alpha):
+    mobj.move_to(alpha * RIGHT + alpha**2 * 2*UP)</code></pre>
+				</li>
+				<li class="fragment">Given such a function, <code>UpdateFromAlphaFunc</code>
+					constructs the corresponding animation!
+				</li>
+				<li class="fragment">
+					<bem>Tip:</bem> store initial state in custom mobject attribute to allow for more flexibility!<br>
+					<code>mobj.initial_position = mobj.get_center()</code><br>
+					... then <code>mobj.initial_position</code> is available
+					in the animation function – or write <em>custom animation</em>
+				</li>
+			</ul>
+		</section>
+	</section>
+	<section>
+		<section data-state="titleslide" data-background-video="assets/DarkPresentationBackground.mp4" data-background-video-loop="true"
+		data-background-opacity="0.1">
+		<div style="">
+			<h4>PART 3</h4>
+			<h2>Anatomy of Animations</h2>
+		</div>
+		</section>
+		<section>
+			<h4><code>Animation</code> methods called in a lifecycle</h4>
+			<ul>
+				<li><code>begin()</code> – <span class="co">prepares first animation frame</span>; stores mobject copy in <code>self.starting_mobject</code></li>
+				<li class="fragment"><code>interpolate_mobject(alpha)</code> – brings <code class="co">self.mobject</code> to the state of <span class="co">$\alpha \%$</span> of animation completed; default: delegates to submobjects</li>
+				<li class="fragment"><code>interpolate_submobject(sub, sub_start, alpha)</code> – same as above, but for a specific submobject (in argument)</li>
+				<li class="fragment"><code>finish()</code> – finishes animation, <span class="co">produces last frame</span></li>
+				<li class="fragment"><code>clean_up_from_scene(scene)</code> – all remaining mobject and scene cleanup (e.g., removing mobjects)</li>
+			</ul>
+		</section>
+		<section>
+			<h4>Implementing your own <code>Animation</code> class</h4>
+			<ul>
+				<li>Basically: inherit from <code>Animation</code>, override <code class="co">interpolate_mobject</code> or <code class="co">interpolate_submobject</code></li>
+				<li class="fragment">Compare how other <code>Animation</code>s in the library are implemented</li>
+				<li class="fragment" >Good luck 😅</li>
+			</ul>
+		</section>
+	</section>
+</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/animate/plugin.js"></script>
+		<script src="plugin/animate/svg.min.js"></script>
+		<script src="plugin/chalkboard/plugin.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/search/search.js"></script>
+		<script src="plugin/zoom/zoom.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				controls: false,
+				hash: true,
+				slideNumber: false,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealChalkboard, RevealMath, RevealAnimate, RevealZoom, RevealSearch ],
+				math: {
+					mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+					// mathjax: 'plugin/math/MathJax.js',
+					config: 'TeX-AMS_HTML-full',
+					// pass other options into `MathJax.Hub.Config()`
+					TeX: { Macros: { RR: "{\\bf R}", id: "\\operatorname{id}" } }
+				},
+				chalkboard: {
+					colorButtons: true,
+				}
+			});
+		</script>
+	</body>
+</html>
