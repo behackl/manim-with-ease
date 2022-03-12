@@ -1,0 +1,153 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Episode 04 | Mathematical Animations WITH EASE</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/behackl-manim-dark.css">
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+		<link rel="stylesheet" href="plugin/chalkboard/palette.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="header-left">
+				Episode 04: Updater Functions
+			</div>
+			<div class="footer-left">
+				<img src="assets/manim-logo-dark.svg" width="50">
+			</div>
+<div class="slides">
+	<section>
+		<section data-state="titleslide" data-background-video="assets/DarkPresentationBackground.mp4" data-background-video-loop="true"
+		data-background-opacity="0.1">
+		<div style="">
+			<h4>EPISODE 04</h4>
+			<h2>Updater Functions</h2>
+		</div>
+		</section>
+		<section>
+			<h4>What is an Updater Function?</h4>
+			<ul>
+			  <li>Special function that is called <bem>right before</bem> Manim captures a new frame</li>
+			  <li class="fragment">... can be attached to Mobjects ("Mobject updater") or the Scene itself ("Scene updater")</li>
+			  <li class="fragment">... can depend on time passed since last rendered frame ("time-dependent updaters")</li>
+			</ul>
+		</section>
+		<section>
+		  <h4>Why are updaters useful?</h4>
+		  <ul>
+		    <li>Mobjects can be made dependent on other mobjects!</li>
+		    <li class="fragment">Example: make a label move with its mobject:
+		      <pre><code class="python" data-line-numbers="-|4-6">def construct(self):
+    blue_dot = Dot(color=BLUE)
+    dot_label = Text("Hello dot!").next_to(blue_dot, UP)
+    dot_label.add_updater(
+        lambda mobject: mobject.next_to(blue_dot, UP)
+    )
+    self.add(blue_dot, dot_label)
+    self.play(blue_dot.animate.shift(RIGHT))
+    self.play(blue_dot.animate.scale(3))
+    self.play(blue_dot.animate.center())</code></pre>
+		    </li>
+		  </ul>
+		</section>
+		<section>
+		  <h4>Updater Function Signature</h4>
+		  <div class="block">
+		    <bem>Important:</bem> This is valid for up to Manim v0.15.1. Devs do not like
+		    this interface and we will likely change it at some point.
+		  </div>
+		  <ul>
+		    <li class="fragment"><bem>Mobject Updaters:</bem> one or two positional arguments, arbitrary keyword arguments
+		      <ul>
+			<li class="fragment">first argument: the mobject itself</li>
+			<li class="fragment">second argument: <bem>only if named <code>dt</code></bem>: time difference</li>
+		      </ul>
+		    </li>
+		    <li class="fragment"><bem>Scene Updaters:</bem> one positional argument (time difference), arbitrary keyword arguments</li>
+		  </ul>
+		</section>
+		<section>
+		  <h4>Useful hints regarding updaters</h4>
+		  <ul>
+		    <li>Common pitfall: assigning updaters in a loop! Due to scoping in Python,
+		      <pre><code>for i in range(len(mob_list)):
+    mob_list[i].add_updater(lambda mob, dt: &lt;code involving i&gt;)</code></pre>
+		      fails. Add loop variable <bem>explicitly</bem> to updater as keyword argument instead:
+		      <pre><code>for i in range(len(mob_list)):
+    mob_list[i].add_updater(lambda mob, dt, i=i: &lt;code involving i&gt;)</code></pre>
+		    </li>
+		    <li class="fragment">Updaters (often 😅) keep running through animations! Control via <code>.suspend_updating()</code>, <code>.resume_updating()</code></li>
+		    <li class="fragment">Updaters are resumed automatically after playing an animation</li>
+		  </ul>
+		</section>
+		<section>
+		  <h4>Depending on a number: <code>ValueTracker</code></h4>
+		  <ul>
+		    <li><code>ValueTracker</code>s are invisible mobjects that store numbers</li>
+		    <li>... lets us use Manim's animation mechanisms to animate modification of a parameter!
+		      <pre><code class="python" data-line-numbers="3|5-9|10|13,14">def construct(self):
+    line = NumberLine(x_range=[-5, 5])
+    position = ValueTracker(0)  # assign initial value of tracker
+    pointer = Vector(DOWN)
+    pointer.add_updater(  # stick pointer to tracked position
+        lambda mob: mob.next_to(
+            line.number_to_point(position.get_value()), UP
+        )
+    )
+    pointer.update()  # manual execution of update function
+    self.add(line, pointer)
+    self.wait()
+    self.play(position.animate.set_value(4))  # change tracker value to 4
+    self.play(position.animate.set_value(-2))  # ... and to -2</code></pre>
+
+		    </li>
+		  </ul>
+		</section>
+	</section>
+</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/animate/plugin.js"></script>
+		<script src="plugin/animate/svg.min.js"></script>
+		<script src="plugin/chalkboard/plugin.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/search/search.js"></script>
+		<script src="plugin/zoom/zoom.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				controls: false,
+				hash: true,
+				slideNumber: false,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealChalkboard, RevealMath, RevealAnimate, RevealZoom, RevealSearch ],
+				math: {
+					mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+					// mathjax: 'plugin/math/MathJax.js',
+					config: 'TeX-AMS_HTML-full',
+					// pass other options into `MathJax.Hub.Config()`
+					TeX: { Macros: { RR: "{\\bf R}", id: "\\operatorname{id}" } }
+				},
+				chalkboard: {
+					colorButtons: true,
+				}
+			});
+		</script>
+	</body>
+</html>
