@@ -1,0 +1,183 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<title>Episode 05 | Mathematical Animations WITH EASE</title>
+
+		<link rel="stylesheet" href="dist/reset.css">
+		<link rel="stylesheet" href="dist/reveal.css">
+		<link rel="stylesheet" href="dist/behackl-manim-dark.css">
+
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+		<!-- Theme used for syntax highlighted code -->
+		<link rel="stylesheet" href="plugin/highlight/monokai.css">
+		<link rel="stylesheet" href="plugin/chalkboard/palette.css">
+	</head>
+	<body>
+		<div class="reveal">
+			<div class="header-left">
+				Episode 05: Interactivity 
+			</div>
+			<div class="footer-left">
+				<img src="assets/manim-logo-dark.svg" width="50">
+			</div>
+<div class="slides">
+	<section>
+		<section data-state="titleslide" data-background-video="assets/DarkPresentationBackground.mp4" data-background-video-loop="true"
+		data-background-opacity="0.1">
+		<div style="">
+			<h4>EPISODE 05</h4>
+			<h2>Interactivity</h2>
+		</div>
+		</section>
+		<section>
+			<h4>The OpenGL renderer and You</h4>
+			<ul>
+			  <li>Different rendering backend (default: Cairo), can utilize GPU</li>  
+			  <li class="fragment">Activate using <code class="co">--renderer=opengl</code> or by setting <code class="co">config.renderer = "opengl"</code></li>
+			  <li class="fragment"><bem>Warning:</bem> user experience can be somewhat rough</li>
+			  <li class="fragment">OpenGL-Mobjects have a different interface (e.g., 
+			    they inherit from <code class="col">OpenGLMobject</code> 
+			    instead of <code class="co">Mobject</code>), but most
+			    user-facing mobjects (<code>Dot</code>, <code>Axes</code>, ...)
+			    can be used without changes
+			  </li>
+			  <li class="fragment">(minor) differences for 3D mobjects, camera control, CLI flags</li>
+			</ul>
+		</section>
+		<section>
+		  <h4>Live render preview</h4>
+		  <ul>
+		    <li>CLI flag behavior is a bit different (subject to change):
+		      <ul>
+			<li><code class="co">-p / --preview</code> shows a live render preview</li>
+			<li><code class="co">--write_to_movie</code> must be passed to obtain a file</li>
+		      </ul>
+		    </li>
+		    <li class="fragment">We can interact with the preview window: add <code class="co">self.interactive_embed()</code>
+		      to end of <code class="co">construct</code>!</li>
+		    <li class="fragment">This <bem>halts</bem> the preview and spawns an IPython terminal
+		      in which further commands can be run – <em>interactive <code>construct</code></em>
+		    </li>
+		    <li class="fragment">Scene class is available as <code class="co">self</code>;
+		      until <a href="https://github.com/ManimCommunity/manim/issues/2669">#2669</a>
+		      is resolved use animation methods <bem>without <code>self.</code></bem> –
+		      <code>play</code>, <code>wait</code>
+		    </li>
+		  </ul>
+		</section>
+		<section>
+		  <h4>Interacting with the render preview</h4>
+		  <ul>
+		    <li>Preview window is a 
+		      <a href="https://pyglet.readthedocs.io/en/latest/index.html">pyglet</a>
+		      window, supports interaction – some defaults are implemented
+		    </li>
+		    <li class="fragment">Mouse interaction
+		      <ul>
+			<li>shift + move mouse: move camera (in plane of frame)</li>
+			<li class="fragment">left mouse button drag: changing camera angles</li>
+			<li class="fragment">right mouse button drag: move camera (in XY plane)</li>
+			<li class="fragment">mouse scroll: zoom in and out</li>
+		      </ul>
+		    </li>
+		    <li class="fragment">Keyboard interaction
+		      <ul>
+			<li>r: reset camera position</li>
+			<li class="fragment">q: quit interactive mode</li>
+		      </ul>
+		    </li>
+		  </ul>
+		</section>
+		<section>
+		  <h4>Custom interactions: relevant methods and mobjects</h4>
+		  <ul>
+		    <li>Mouse:
+		      <ul>
+			<li>Methods: <code class="co" style="font-size: 0.65em;">Scene.on_mouse_motion</code>,
+			  <code class="co" style="font-size: 0.65em;">Scene.on_mouse_scroll</code>,
+			  <code class="co" style="font-size: 0.65em;">Scene.on_mouse_drag</code>
+			</li>
+			<li>Mobjects <code class="co">Scene.mouse_point</code>,
+			  <code class="co">Scene.mouse_drag_point</code>
+			  hold coordinates of mouse on preview window
+			</li>
+			<li>
+			  By default middle top of window is
+			  <code>[0, 4, 0]</code>, regardless of camera
+			  orientation
+			</li>
+		      </ul>
+		    </li>
+		    <li>Keyboard methods: <code class="co">Scene.on_key_press</code>,
+		      <code class="co">Scene.on_key_release</code>
+		    </li>
+		  </ul>
+		</section>
+		<section style="text-align: left;">
+		  <h4>Custom interactions: key press example</h4>
+		  <ul>
+		    <li>For readability: use 
+		      <a href="https://pyglet.readthedocs.io/en/latest/modules/window_key.html">pyglet's key constants</a></li>
+		    <li>Bitwise operations <code>& |</code> for modifier checks</li>
+		  </ul>
+		  <pre><code data-line-numbers="-|1|8-11|13-15|17|-">from pyglet.window import key as pyglet_key
+
+class KeyboardInteract(Scene):
+    def construct(self):
+        ...
+        self.interactive_embed()
+
+    def on_key_press(self, symbol, modifiers):
+       if symbol == pyglet_key.X:
+           # X is pressed
+           self.play(...)
+           
+       if symbol == pyglet_key.SPACE and modifiers & pyglet_key.MOD_CTRL:
+           # CTRL is held down and spacebar is pressed
+           self.play(...)
+
+       super().on_key_press(key, modifiers)</code></pre>
+		</section>
+	    </section>
+</div>
+		</div>
+
+		<script src="dist/reveal.js"></script>
+		<script src="plugin/animate/plugin.js"></script>
+		<script src="plugin/animate/svg.min.js"></script>
+		<script src="plugin/chalkboard/plugin.js"></script>
+		<script src="plugin/highlight/highlight.js"></script>
+		<script src="plugin/markdown/markdown.js"></script>
+		<script src="plugin/math/math.js"></script>
+		<script src="plugin/notes/notes.js"></script>
+		<script src="plugin/search/search.js"></script>
+		<script src="plugin/zoom/zoom.js"></script>
+		<script>
+			// More info about initialization & config:
+			// - https://revealjs.com/initialization/
+			// - https://revealjs.com/config/
+			Reveal.initialize({
+				controls: false,
+				hash: true,
+				slideNumber: false,
+
+				// Learn about plugins: https://revealjs.com/plugins/
+				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes, RevealChalkboard, RevealMath, RevealAnimate, RevealZoom, RevealSearch ],
+				math: {
+					mathjax: 'https://cdn.jsdelivr.net/gh/mathjax/mathjax@2.7.8/MathJax.js',
+					// mathjax: 'plugin/math/MathJax.js',
+					config: 'TeX-AMS_HTML-full',
+					// pass other options into `MathJax.Hub.Config()`
+					TeX: { Macros: { RR: "{\\bf R}", id: "\\operatorname{id}" } }
+				},
+				chalkboard: {
+					colorButtons: true,
+				}
+			});
+		</script>
+	</body>
+</html>
