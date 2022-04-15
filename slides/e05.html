@@ -40,9 +40,9 @@
 			  <li class="fragment">Activate using <code class="co">--renderer=opengl</code> or by setting <code class="co">config.renderer = "opengl"</code></li>
 			  <li class="fragment"><bem>Warning:</bem> user experience can be somewhat rough</li>
 			  <li class="fragment">OpenGL-Mobjects have a different interface (e.g., 
-			    they inherit from <code class="col">OpenGLMobject</code> 
+			    they inherit from <code class="co">OpenGLMobject</code> 
 			    instead of <code class="co">Mobject</code>), but most
-			    user-facing mobjects (<code>Dot</code>, <code>Axes</code>, ...)
+			    user-facing mobjects (<code>Dot</code>, <code>Axes</code>, …)
 			    can be used without changes
 			  </li>
 			  <li class="fragment">(minor) differences for 3D mobjects, camera control, CLI flags</li>
@@ -101,18 +101,18 @@
 			  <code class="co" style="font-size: 0.65em;">Scene.on_mouse_scroll</code>,
 			  <code class="co" style="font-size: 0.65em;">Scene.on_mouse_drag</code>
 			</li>
-			<li>Mobjects <code class="co">Scene.mouse_point</code>,
+			<li class="fragment">Mobjects <code class="co">Scene.mouse_point</code>,
 			  <code class="co">Scene.mouse_drag_point</code>
 			  hold coordinates of mouse on preview window
 			</li>
-			<li>
+			<li class="fragment">
 			  By default middle top of window is
 			  <code>[0, 4, 0]</code>, regardless of camera
 			  orientation
 			</li>
 		      </ul>
 		    </li>
-		    <li>Keyboard methods: <code class="co">Scene.on_key_press</code>,
+		    <li class="fragment">Keyboard methods: <code class="co">Scene.on_key_press</code>,
 		      <code class="co">Scene.on_key_release</code>
 		    </li>
 		  </ul>
@@ -124,14 +124,13 @@
 		      <a href="https://pyglet.readthedocs.io/en/latest/modules/window_key.html">pyglet's key constants</a></li>
 		    <li>Bitwise operations <code>& |</code> for modifier checks</li>
 		  </ul>
-		  <pre><code data-line-numbers="-|1|8-11|13-15|17|-">from pyglet.window import key as pyglet_key
-
-class KeyboardInteract(Scene):
+		  <pre><code data-line-numbers="-|6-7|6-10|12-14|16|-">class KeyboardInteract(Scene):
     def construct(self):
         ...
         self.interactive_embed()
 
     def on_key_press(self, symbol, modifiers):
+       from pyglet.window import key as pyglet_key
        if symbol == pyglet_key.X:
            # X is pressed
            self.play(...)
