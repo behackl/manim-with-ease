@@ -1,5 +1,7 @@
 from manim import *
-from colour import Color
+# changed with v0.18.0: we no longer need the colour module
+# and use our own ManimColor class instead.
+from manim import ManimColor as Color
 import random
 
 
